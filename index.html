@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Bard's Lexicon | 莎士比亞文青詞彙誌</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,400;1,600&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-paper: #f6f1e7;
+      --card-bg: #fffdf9;
+      --ink-primary: #231f20;
+      --ink-muted: #5e564d;
+      --accent-burgundy: #6e262c;
+      --accent-gold: #b08d57;
+      --border-line: #dcd3c1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-paper);
+      color: var(--ink-primary);
+      font-family: 'Noto Serif TC', Georgia, serif;
+      line-height: 1.7;
+      padding-bottom: 4rem;
+    }
+
+    header {
+      text-align: center;
+      padding: 3rem 1.5rem 2rem;
+      border-bottom: 1px solid var(--border-line);
+      background: radial-gradient(circle at top, #fcf9f2 0%, var(--bg-paper) 100%);
+    }
+
+    .subtitle-top {
+      font-family: 'Cormorant Garamond', serif;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      margin: 0.3rem 0;
+      color: var(--ink-primary);
+    }
+
+    .header-desc {
+      color: var(--ink-muted);
+      font-size: 0.95rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* A-Z 導覽列 */
+    .az-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.4rem;
+      max-width: 960px;
+      margin: 1.8rem auto;
+      padding: 0 1rem;
+    }
+
+    .az-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border-line);
+      background: var(--card-bg);
+      color: var(--ink-primary);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 4px;
+    }
+
+    .az-btn:hover {
+      border-color: var(--accent-burgundy);
+      color: var(--accent-burgundy);
+    }
+
+    .az-btn.active {
+      background: var(--accent-burgundy);
+      color: #fff;
+      border-color: var(--accent-burgundy);
+    }
+
+    /* 主卡片容器 */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .lexicon-card {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      background: var(--card-bg);
+      border: 1px solid var(--border-line);
+      box-shadow: 0 12px 35px rgba(35, 31, 32, 0.06);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+      .lexicon-card { grid-template-columns: 1fr; }
+    }
+
+    /* 左側印象派油畫區 */
+    .artwork-pane {
+      position: relative;
+      background: #eae2d3;
+      min-height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-right: 1px solid var(--border-line);
+    }
+
+    .artwork-pane img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .artwork-pane:hover img {
+      transform: scale(1.03);
+    }
+
+    .letter-watermark {
+      position: absolute;
+      top: 1rem;
+      left: 1.2rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1;
+      color: rgba(255, 255, 255, 0.88);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+      pointer-events: none;
+    }
+
+    /* 右側內容區 */
+    .content-pane {
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .word-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      border-bottom: 1px solid var(--border-line);
+      padding-bottom: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .word-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--accent-burgundy);
+      line-height: 1.1;
+    }
+
+    .word-pos {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--ink-muted);
+      margin-left: 0.4rem;
+    }
+
+    .audio-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 0.9rem;
+      border: 1px solid var(--accent-burgundy);
+      background: transparent;
+      color: var(--accent-burgundy);
+      font-family: 'Noto Serif TC', serif;
+      font-size: 0.85rem;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .audio-btn:hover, .audio-btn.playing {
+      background: var(--accent-burgundy);
+      color: #fff;
+    }
+
+    .meaning-box {
+      margin-bottom: 1.5rem;
+    }
+
+    .meaning-zh {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .meaning-note {
+      font-size: 0.95rem;
+      color: var(--ink-muted);
+    }
+
+    .quote-box {
+      background: #f9f5ed;
+      border-left: 3px solid var(--accent-gold);
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1.5rem;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .quote-en {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-style: italic;
+      color: var(--ink-primary);
+      margin-bottom: 0.5rem;
+      line-height: 1.45;
+    }
+
+    .quote-en mark {
+      background: rgba(176, 141, 87, 0.25);
+      color: var(--accent-burgundy);
+      font-weight: 700;
+      padding: 0 3px;
+      border-radius: 2px;
+    }
+
+    .quote-zh {
+      font-size: 0.9rem;
+      color: var(--ink-muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .quote-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .play-source {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+
+    .nav-controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed var(--border-line);
+    }
+
+    .nav-step {
+      background: none;
+      border: none;
+      color: var(--ink-muted);
+      font-family: 'Noto Serif TC', serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .nav-step:hover {
+      color: var(--accent-burgundy);
+      text-decoration: underline;
+    }
+
+    .status-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--ink-primary);
+      color: #fff;
+      padding: 0.7rem 1.2rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .status-toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="subtitle-top">A–Z Shakespearean Glossary &amp; Impressionist Gallery</div>
+    <h1>The Bard’s Lexicon</h1>
+    <p class="header-desc">從 A 到 Z 精選二十六個莎士比亞劇本古典詞彙，結合印象派油畫意象與劇本金句朗讀。</p>
+  </header>
+
+  <nav class="az-nav" id="azNav" aria-label="A to Z 字母導覽"></nav>
+
+  <main class="container">
+    <article class="lexicon-card">
+      <div class="artwork-pane">
+        <span class="letter-watermark" id="letterMark">A</span>
+        <img id="artImage" src="images/A.jpg" alt="Impressionist painting for Apparition" />
+      </div>
+
+      <div class="content-pane">
+        <div>
+          <div class="word-header">
+            <div>
+              <span class="word-title" id="wordTitle">Apparition</span>
+              <span class="word-pos" id="wordPos">(n.)</span>
+            </div>
+            <button class="audio-btn" id="btnPlayWord" onclick="playAudio('word')">
+              🔊 單字發音
+            </button>
+          </div>
+
+          <div class="meaning-box">
+            <div class="meaning-zh" id="meaningZh">幽靈、幻影、超自然顯靈</div>
+            <div class="meaning-note" id="meaningNote">比 ghost 更具宿命感與古典戲劇張力，適合形容轉瞬即逝的靈感或記憶。</div>
+          </div>
+
+          <div class="quote-box">
+            <div class="quote-en" id="quoteEn"></div>
+            <div class="quote-zh" id="quoteZh"></div>
+            <div class="quote-footer">
+              <span class="play-source" id="playSource"></span>
+              <button class="audio-btn" id="btnPlayQuote" onclick="playAudio('quote')">
+                🎭 劇本金句朗讀
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-controls">
+          <button class="nav-step" onclick="stepCard(-1)">← 上一個字母</button>
+          <button class="nav-step" onclick="stepCard(1)">下一個字母 →</button>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <audio id="audioPlayer"></audio>
+  <div class="status-toast" id="toast"></div>
+
+  <script>
+    const LEXICON_DATA = [
+      {
+        letter: "A", word: "Apparition", pos: "(n.)",
+        zh: "幽靈、幻影、超自然顯靈",
+        note: "比 ghost 更具宿命感與戲劇張力，適合形容轉瞬即逝的靈感或舊愛記憶。",
+        quoteEn: "Be lion-mettled, proud, and take no care who chafes, who frets, or where conspirers are. (Enter an <mark>Apparition</mark>)",
+        quotePlain: "Be lion-mettled, proud, and take no care who chafes, who frets, or where conspirers are.",
+        quoteZh: "「要像獅子般無畏、驕傲，別管誰在惱怒、誰在焦慮，也別管陰謀者身在何處。」",
+        source: "Macbeth 《馬克白》 Act 4, Scene 1"
+      },
+      {
+        letter: "B", word: "Beguile", pos: "(v.)",
+        zh: "消磨（時光）、迷住、欺騙",
+        note: "文青感極強的動詞，用來形容「用一杯手沖咖啡消磨午後」特別優雅。",
+        quoteEn: "To <mark>beguile</mark> the time, look like the time.",
+        quotePlain: "To beguile the time, look like the time.",
+        quoteZh: "「為了欺瞞世人的眼睛（消磨時光），你得表現得順應時勢。」",
+        source: "Macbeth 《馬克白》 Act 1, Scene 5"
+      },
+      {
+        letter: "C", word: "Chide", pos: "(v.)",
+        zh: "輕聲責備、微嗔埋怨",
+        note: "帶有戀人間愛之深責之切的溫柔語氣，而非嚴厲斥責。",
+        quoteEn: "My only love sprung from my only hate! Too early seen unknown, and known too late!",
+        quotePlain: "My only love sprung from my only hate! Too early seen unknown, and known too late!",
+        quoteZh: "「我唯一的愛竟源自唯一的恨！不相識時見得太早，相識時卻已太遲！」（茱麗葉埋怨命運）",
+        source: "Romeo and Juliet 《羅密歐與茱麗葉》 Act 1, Scene 5"
+      },
+      {
+        letter: "D", word: "Dalliance", pos: "(n.)",
+        zh: "調情、嬉戲、虛度光陰",
+        note: "出自經典意象「享樂的櫻草花小徑」，充滿浪漫頹廢氣息。",
+        quoteEn: "Himself the primrose path of <mark>dalliance</mark> treads, and recks not his own rede.",
+        quotePlain: "Himself the primrose path of dalliance treads, and recks not his own rede.",
+        quoteZh: "「他自己踏著享樂調情的櫻草花小徑，卻把自己的忠告拋諸腦後。」",
+        source: "Hamlet 《哈姆雷特》 Act 1, Scene 3"
+      },
+      {
+        letter: "E", word: "Ere", pos: "(prep./conj.)",
+        zh: "在……之前（古英語，等同 before）",
+        note: "寫明信片或社群文案時用 ere 替換 before，瞬間充滿古典詩意。",
+        quoteEn: "When shall we three meet again? In thunder, lightning, or in rain? — That will be <mark>ere</mark> the set of sun.",
+        quotePlain: "That will be ere the set of sun.",
+        quoteZh: "「那將會在日落之前。」",
+        source: "Macbeth 《馬克白》 Act 1, Scene 1"
+      },
+      {
+        letter: "F", word: "Fickle", pos: "(adj.)",
+        zh: "善變的、無常的",
+        note: "常與命運（Fortune）或人心連用，適合感嘆世事難料。",
+        quoteEn: "O Fortune, Fortune! All men call thee <mark>fickle</mark>.",
+        quotePlain: "O Fortune, Fortune! All men call thee fickle.",
+        quoteZh: "「啊，命運，命運！世人都說你是善變無常的。」",
+        source: "Romeo and Juliet 《羅密歐與茱麗葉》 Act 3, Scene 5"
+      },
+      {
+        letter: "G", word: "Gilded", pos: "(adj.)",
+        zh: "鍍金的、虛有其表的",
+        note: "英文成語 gild the lily（畫蛇添足）的起源。",
+        quoteEn: "To <mark>gild</mark> refined gold, to paint the lily... is wasteful and ridiculous excess.",
+        quotePlain: "To gild refined gold, to paint the lily is wasteful and ridiculous excess.",
+        quoteZh: "「為純金鍍金、為百合著色……都是浪費且荒謬的多此一舉。」",
+        source: "King John 《約翰王》 Act 4, Scene 2"
+      },
+      {
+        letter: "H", word: "Hark", pos: "(v.)",
+        zh: "傾聽！聽啊！",
+        note: "充滿舞台劇感的感嘆詞，用來提醒朋友注意某段旋律或遠處的風聲。",
+        quoteEn: "<mark>Hark</mark>, <mark>hark</mark>! Bow-wow. The watch-dogs bark!",
+        quotePlain: "Hark, hark! Bow-wow. The watch-dogs bark!",
+        quoteZh: "「聽啊，聽啊！汪汪。看門狗在吠叫了！」",
+        source: "The Tempest 《暴風雨》 Act 1, Scene 2"
+      },
+      {
+        letter: "I", word: "Inconstant", pos: "(adj.)",
+        zh: "多變的、不忠的",
+        note: "茱麗葉拒絕羅密歐對著月亮發誓，因為月亮每個月都在圓缺變化。",
+        quoteEn: "O, swear not by the moon, th' <mark>inconstant</mark> moon, that monthly changes in her circled orb.",
+        quotePlain: "O, swear not by the moon, the inconstant moon, that monthly changes in her circled orb.",
+        quoteZh: "「啊，別指著月亮起誓，那多變的月亮，每個月都在她的圓軌道上變換盈虧。」",
+        source: "Romeo and Juliet 《羅密歐與茱麗葉》 Act 2, Scene 2"
+      },
+      {
+        letter: "J", word: "Jocund", pos: "(adj.)",
+        zh: "歡樂的、愉悅的",
+        note: "用來形容晨光初現或微醺時的輕快心境，比 happy 優雅得多。",
+        quoteEn: "Night's candles are burnt out, and <mark>jocund</mark> day stands tiptoe on the misty mountain tops.",
+        quotePlain: "Night's candles are burnt out, and jocund day stands tiptoe on the misty mountain tops.",
+        quoteZh: "「夜的燭火已燃盡，歡愉的白晝正踮起腳尖，佇立在薄霧繚繞的山巔。」",
+        source: "Romeo and Juliet 《羅密歐與茱麗葉》 Act 3, Scene 5"
+      },
+      {
+        letter: "K", word: "Knave", pos: "(n.)",
+        zh: "無賴、惡棍、小人",
+        note: "哈姆雷特對奧菲莉亞說的狠話，適合用來幽默調侃損友。",
+        quoteEn: "We are arrant <mark>knaves</mark> all; believe none of us.",
+        quotePlain: "We are arrant knaves all; believe none of us.",
+        quoteZh: "「我們全都是徹頭徹尾的無賴；一個也別相信。」",
+        source: "Hamlet 《哈姆雷特》 Act 3, Scene 1"
+      },
+      {
+        letter: "L", word: "Languish", pos: "(v.)",
+        zh: "憔悴、受相思之苦、消沉",
+        note: "文青憂鬱美學的代表字，形容為情所困或對藝術的執迷。",
+        quoteEn: "One desperate grief cures with another's <mark>languish</mark>.",
+        quotePlain: "One desperate grief cures with another's languish.",
+        quoteZh: "「一種絕望的悲痛，唯有靠另一場相思的憔悴來治癒。」",
+        source: "Romeo and Juliet 《羅密歐與茱麗葉》 Act 1, Scene 2"
+      },
+      {
+        letter: "M", word: "Melancholy", pos: "(n./adj.)",
+        zh: "憂鬱、多愁善感",
+        note: "莎翁筆下的憂鬱往往帶著一點哲學家的自嘲與詩意。",
+        quoteEn: "I can suck <mark>melancholy</mark> out of a song, as a weasel sucks eggs.",
+        quotePlain: "I can suck melancholy out of a song, as a weasel sucks eggs.",
+        quoteZh: "「我能從一首歌裡吸出憂鬱，就像黃鼠狼吸吮鳥蛋一樣。」",
+        source: "As You Like It 《皆大歡喜》 Act 2, Scene 5"
+      },
+      {
+        letter: "N", word: "Naught", pos: "(pron./n.)",
+        zh: "無、零、虛無",
+        note: "充滿存在主義式的冷冽與宿命感。",
+        quoteEn: "Nothing will come of <mark>naught</mark>: speak again.",
+        quotePlain: "Nothing will come of naught: speak again.",
+        quoteZh: "「一無所有只能換來一無所有：再說一次吧。」",
+        source: "King Lear 《李爾王》 Act 1, Scene 1"
+      },
+      {
+        letter: "O", word: "Oft", pos: "(adv.)",
+        zh: "時常、往往（often 的詩意縮寫）",
+        note: "單音節的節奏感極佳，適合寫在短詩或座右銘中。",
+        quoteEn: "The evil that men do lives after them; the good is <mark>oft</mark> interred with their bones.",
+        quotePlain: "The evil that men do lives after them; the good is oft interred with their bones.",
+        quoteZh: "「人所做的惡事在身後流傳；善行卻往往隨骸骨一同埋葬。」",
+        source: "Julius Caesar 《凱撒大帝》 Act 3, Scene 2"
+      },
+      {
+        letter: "P", word: "Perchance", pos: "(adv.)",
+        zh: "或許、也許",
+        note: "比 maybe 更有躊躇與哲學深度，哈姆雷特經典獨白的靈魂詞彙。",
+        quoteEn: "To sleep, <mark>perchance</mark> to dream—ay, there's the rub.",
+        quotePlain: "To sleep, perchance to dream—ay, there's the rub.",
+        quoteZh: "「睡去，或許會做夢——哎，這就是癥結所在。」",
+        source: "Hamlet 《哈姆雷特》 Act 3, Scene 1"
+      },
+      {
+        letter: "Q", word: "Quill", pos: "(n.)",
+        zh: "羽毛筆",
+        note: "象徵創作、書信與文字的力量。",
+        quoteEn: "Let there be gall enough in thy ink, though thou write with a goose-pen (<mark>quill</mark>).",
+        quotePlain: "Let there be gall enough in thy ink, though thou write with a goose-pen.",
+        quoteZh: "「就算你用的是鵝毛筆，也要讓你的墨水裡充滿辛辣的膽汁。」",
+        source: "Twelfth Night 《第十二夜》 Act 3, Scene 2"
+      },
+      {
+        letter: "R", word: "Requiem", pos: "(n.)",
+        zh: "安魂曲、輓歌",
+        note: "自帶莊嚴與悲劇美感的詞彙，適合形容深沉的音樂或結束的關係。",
+        quoteEn: "We should profane the service of the dead to sing a <mark>requiem</mark> and such rest to her.",
+        quotePlain: "We should profane the service of the dead to sing a requiem and such rest to her.",
+        quoteZh: "「若為她唱安魂曲祈求安息，便是褻瀆了亡者的葬禮。」",
+        source: "Hamlet 《哈姆雷特》 Act 5, Scene 1"
+      },
+      {
+        letter: "S", word: "Soliloquy", pos: "(n.)",
+        zh: "獨白、自言自語",
+        note: "戲劇學核心詞彙，形容深夜一個人在房間思考人生的時刻。",
+        quoteEn: "To be, or not to be, that is the question.",
+        quotePlain: "To be, or not to be, that is the question.",
+        quoteZh: "「生存還是毀滅，這是一個值得考慮的問題。」（戲劇史上最著名的獨白）",
+        source: "Hamlet 《哈姆雷特》 Act 3, Scene 1"
+      },
+      {
+        letter: "T", word: "Tempest", pos: "(n.)",
+        zh: "暴風雨、劇烈動盪",
+        note: "既指自然界的狂風暴雨，也隱喻內心世界或時代的劇變。",
+        quoteEn: "What cares these roarers for the name of king?",
+        quotePlain: "What cares these roarers for the name of king?",
+        quoteZh: "「這些咆哮的狂風巨浪哪裡在乎什麼國王的頭銜？」",
+        source: "The Tempest 《暴風雨》 Act 1, Scene 1"
+      },
+      {
+        letter: "U", word: "Undiscovered", pos: "(adj.)",
+        zh: "未被發現的、未知的",
+        note: "莎翁用 undiscovered country（未知之境）隱喻死亡，美得令人屏息。",
+        quoteEn: "The <mark>undiscovered</mark> country from whose bourn no traveller returns.",
+        quotePlain: "The undiscovered country from whose bourn no traveller returns.",
+        quoteZh: "「那從未有旅人歸來的未知國度。」",
+        source: "Hamlet 《哈姆雷特》 Act 3, Scene 1"
+      },
+      {
+        letter: "V", word: "Valiant", pos: "(adj.)",
+        zh: "英勇的、無畏的",
+        note: "極具力量感的詞彙，這句台詞非常適合作為每日金句。",
+        quoteEn: "Cowards die many times before their
